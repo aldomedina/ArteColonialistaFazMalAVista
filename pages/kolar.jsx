@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import useAnimationFrame from "../components/Hooks/useAnimationFrame";
 import { shuffleArray } from "../utils";
+import styled from "styled-components";
 
+const SCanvas = styled.canvas``;
 const pieceSize = 10;
 
 const KolarPage = () => {
   const imgRef = useRef(null);
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
-  const [aspectRatio, setAspectRatio] = useState(null);
   const [videoConstraints, setVideoConstraints] = useState({});
   const [size, setSize] = useState({});
   const [pieces, setPieces] = useState([]);
@@ -20,9 +21,12 @@ const KolarPage = () => {
       .then((stream) => {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
-        setAspectRatio(stream.getVideoTracks()[0].getSettings().aspectRatio);
+        const { height, width } = stream.getVideoTracks()[0].getSettings();
+        setVideoConstraints({ height, width });
       });
+  }, []);
 
+  useEffect(() => {
     // kolar uniques
     const { width: inputW, height: inputH } = canvasRef.current;
     const pieceW = inputW / pieceSize;
@@ -37,8 +41,7 @@ const KolarPage = () => {
       puzzleW,
       puzzleH,
     });
-  }, []);
-
+  }, [videoConstraints]);
   useEffect(() => {
     const { inputW, inputH, pieceW, pieceH, puzzleW, puzzleH } = settings;
     let piece,
@@ -103,13 +106,16 @@ const KolarPage = () => {
   return (
     <div className="flex justify-center items-center bg-ccc h-full w-full">
       <div className="flex justify-center gap-2 items-center">
-        <canvas ref={canvasRef} width="602" height="602" className="canvas" />
+        <SCanvas
+          width={videoConstraints.width}
+          height={videoConstraints.height}
+          ref={canvasRef}
+          className="canvas"
+        />
         {/* <img ref={imgRef} src={img} className="img" /> */}
       </div>
       <video
         ref={videoRef}
-        width="300"
-        height="150"
         style={{
           transform: "scale(-1, 1)",
           position: "fixed",
