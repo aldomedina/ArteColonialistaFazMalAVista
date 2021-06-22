@@ -3,7 +3,9 @@ import useAnimationFrame from "../components/Hooks/useAnimationFrame";
 import { shuffleArray } from "../utils";
 import styled from "styled-components";
 
-const SCanvas = styled.canvas``;
+const SCanvas = styled.canvas`
+  transform: ${({ modifier }) => `scale(${modifier})`};
+`;
 const pieceSize = 10;
 
 const KolarPage = () => {
@@ -11,18 +13,20 @@ const KolarPage = () => {
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
   const [videoConstraints, setVideoConstraints] = useState({});
-  const [size, setSize] = useState({});
+  const [sizeModifier, setSizeModifier] = useState(1);
   const [pieces, setPieces] = useState([]);
   const [settings, setSettings] = useState({});
 
   useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
+    navigator?.mediaDevices
+      ?.getUserMedia({ video: true, audio: false })
       .then((stream) => {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
-        const { height, width } = stream.getVideoTracks()[0].getSettings();
-        setVideoConstraints({ height, width });
+        const { height, width, aspectRatio } = stream
+          .getVideoTracks()[0]
+          .getSettings();
+        setVideoConstraints({ height, width, aspectRatio });
       });
   }, []);
 
@@ -41,7 +45,16 @@ const KolarPage = () => {
       puzzleW,
       puzzleH,
     });
+
+    if (typeof window !== "undefined") {
+      const { innerWidth, innerHeight } = window;
+      const { height, width, aspectRatio } = videoConstraints;
+      aspectRatio > 1
+        ? setSizeModifier(innerWidth / width)
+        : setSizeModifier(innerHeight / height);
+    }
   }, [videoConstraints]);
+
   useEffect(() => {
     const { inputW, inputH, pieceW, pieceH, puzzleW, puzzleH } = settings;
     let piece,
@@ -105,14 +118,14 @@ const KolarPage = () => {
 
   return (
     <div className="flex justify-center items-center bg-ccc h-full w-full">
-      <div className="flex justify-center gap-2 items-center">
+      <div className="fixed h-full w-full inset-0 overflow-hidden flex justify-center items-center">
         <SCanvas
           width={videoConstraints.width}
           height={videoConstraints.height}
+          modifier={sizeModifier}
           ref={canvasRef}
           className="canvas"
         />
-        {/* <img ref={imgRef} src={img} className="img" /> */}
       </div>
       <video
         ref={videoRef}
