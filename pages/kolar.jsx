@@ -20,7 +20,15 @@ const KolarPage = () => {
 
   useEffect(() => {
     navigator?.mediaDevices
-      ?.getUserMedia({ video: true, audio: false })
+      ?.getUserMedia({
+        video: true,
+        audio: false,
+        video: {
+          facingMode: {
+            exact: "environment",
+          },
+        },
+      })
       .then((stream) => {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
