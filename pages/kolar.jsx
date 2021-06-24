@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import useAnimationFrame from "../components/Hooks/useAnimationFrame";
+import BottomTitle from "../components/BottomTitle";
 import { shuffleArray } from "../utils";
 import styled from "styled-components";
 
@@ -135,6 +136,7 @@ const KolarPage = () => {
           left: -10000,
         }}
       />
+      <BottomTitle />
     </div>
   );
 };
