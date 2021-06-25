@@ -3,6 +3,7 @@ import useAnimationFrame from "../components/Hooks/useAnimationFrame";
 import BottomTitle from "../components/BottomTitle";
 import { shuffleArray } from "../utils";
 import styled from "styled-components";
+import { createFloydSteinbergCanvas } from "../components/Draws/FloydSteinberg";
 
 const SCanvas = styled.canvas`
   transform: ${({ modifier }) => `scale(${modifier})`};
@@ -91,36 +92,41 @@ const KolarPage = () => {
     const canvas = canvasRef.current;
     if (!canvas || !videoInput) return;
     const ctx = canvas.getContext("2d");
-    const { inputW, inputH, pieceW, pieceH, puzzleW, puzzleH } = settings;
-    let piece = {},
-      xPos = 0,
-      yPos = 0;
+    ctx.drawImage(videoInput, 0, 0, canvas.width, canvas.height);
+    const floydCanvas = createFloydSteinbergCanvas(canvas, 0.72);
+    ctx.drawImage(floydCanvas, 0, 0, canvas.width, canvas.height);
 
-    for (let i = 0; i < pieces.length; i++) {
-      piece = pieces[i];
-      piece.xPos = xPos;
-      piece.yPos = yPos;
-      ctx.drawImage(
-        videoInput,
-        piece.sx,
-        piece.sy,
-        pieceW,
-        pieceH,
-        xPos,
-        yPos,
-        pieceW,
-        pieceH
-      );
-      xPos += pieceW;
-      if (xPos >= puzzleW) {
-        xPos = 0;
-        yPos += pieceH;
-      }
-    }
-    if (one) {
-      console.log(pieces);
-    }
-    one = 0;
+    // pixelSize
+    // const { inputW, inputH, pieceW, pieceH, puzzleW, puzzleH } = settings;
+    // let piece = {},
+    //   xPos = 0,
+    //   yPos = 0;
+
+    // for (let i = 0; i < pieces.length; i++) {
+    //   piece = pieces[i];
+    //   piece.xPos = xPos;
+    //   piece.yPos = yPos;
+    //   ctx.drawImage(
+    //     videoInput,
+    //     piece.sx,
+    //     piece.sy,
+    //     pieceW,
+    //     pieceH,
+    //     xPos,
+    //     yPos,
+    //     pieceW,
+    //     pieceH
+    //   );
+    //   xPos += pieceW;
+    //   if (xPos >= puzzleW) {
+    //     xPos = 0;
+    //     yPos += pieceH;
+    //   }
+    // }
+    // if (one) {
+    //   console.log(pieces);
+    // }
+    // one = 0;
   };
 
   return (
@@ -142,7 +148,7 @@ const KolarPage = () => {
           left: -10000,
         }}
       />
-      <BottomTitle />
+      <BottomTitle bg />
     </div>
   );
 };

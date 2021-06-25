@@ -1,8 +1,12 @@
 import React from "react";
 
-const BottomTitle = () => {
+const BottomTitle = ({ bg }) => {
   return (
-    <div className="fixed bottom-0 left-0 px-05 py-05 w-full">
+    <div
+      className={`fixed bottom-0 left-0 px-05 py-05 w-full ${
+        bg ? "bg-white" : "text-white"
+      }`}
+    >
       <h1 className="uppercase pixelate">
         A Arte Fascista <br />
         faz mal à vista
