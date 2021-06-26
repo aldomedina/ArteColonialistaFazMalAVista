@@ -1,35 +1,52 @@
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as cocossd from "@tensorflow-models/coco-ssd";
+import styled from "styled-components";
 import Webcam from "react-webcam";
 import useAnimationFrame from "../components/Hooks/useAnimationFrame";
-import useWindowsSize from "../components/Hooks/useWindowsSize";
 
-function Eurocentrism() {
-  const webcamRef = useRef(null);
+const SCanvas = styled.canvas`
+  transform: ${({ modifier }) => `scale(${modifier})`};
+`;
+
+const KolarPage = () => {
   const canvasRef = useRef(null);
-  const [detections, setDetections] = useState([]);
+  const videoRef = useRef(null);
+  const [videoConstraints, setVideoConstraints] = useState({});
   const [sizeModifier, setSizeModifier] = useState(1);
-  const { width, height } = useWindowsSize();
+  const [detections, setDetections] = useState([]);
 
   useEffect(() => {
-    runCoco();
+    navigator?.mediaDevices
+      ?.getUserMedia({
+        video: true,
+        audio: false,
+        video: {
+          facingMode: "environment",
+        },
+      })
+      .then((stream) => {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+        const { height, width, aspectRatio } = stream
+          .getVideoTracks()[0]
+          .getSettings();
+        setVideoConstraints({ height, width, aspectRatio });
+        runCoco();
+      });
   }, []);
 
   useEffect(() => {
-    if (webcamRef?.current?.video) resizeCanvas();
-  }, [width, height, webcamRef]);
+    const { width: inputW, height: inputH } = canvasRef.current;
 
-  const resizeCanvas = (a) => {
-    console.log("argument", a);
-    const { videoWidth, videoHeight } = webcamRef.current.video;
-    if (videoWidth && videoHeight) {
-      const aspectRatio = videoWidth / videoHeight;
-      const multiplicador =
-        aspectRatio > 1 ? width / videoWidth : height / videoHeight;
-      setSizeModifier(multiplicador);
+    if (typeof window !== "undefined") {
+      const { innerWidth, innerHeight } = window;
+      const { height, width, aspectRatio } = videoConstraints;
+      aspectRatio > 1
+        ? setSizeModifier(innerWidth / width)
+        : setSizeModifier(innerHeight / height);
     }
-  };
+  }, [videoConstraints]);
 
   const runCoco = async () => {
     const net = await cocossd.load();
@@ -37,40 +54,20 @@ function Eurocentrism() {
       detect(net);
     }, 10);
   };
-
   const detect = async (net) => {
-    // Check data is available
-    if (
-      typeof webcamRef.current !== "undefined" &&
-      webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4
-    ) {
-      // Get Video Properties
-      const video = webcamRef.current.video;
-
-      // Make Detections
-      const predictions = await net.detect(video);
+    if (typeof videoRef.current !== "undefined" && videoRef.current !== null) {
+      const predictions = await net.detect(videoRef.current);
       setDetections(predictions);
     }
   };
 
-  useEffect(() => {
-    console.log(detections);
-  }, [detections]);
-
   useAnimationFrame(() => grabFrame());
 
   const grabFrame = () => {
-    if (!canvasRef || !webcamRef) return;
-    const videoInput = webcamRef.current.video;
+    if (!canvasRef || !videoRef) return;
+    const videoInput = videoRef.current;
     const canvas = canvasRef.current;
     if (!canvas || !videoInput) return;
-
-    // Set canvas height and width
-    const { videoWidth, videoHeight } = videoInput;
-    canvas.width = videoWidth;
-    canvas.height = videoHeight;
-
     const ctx = canvas.getContext("2d");
 
     ctx.drawImage(videoInput, 0, 0);
@@ -97,27 +94,26 @@ function Eurocentrism() {
   };
 
   return (
-    <div className="w-full h-full">
-      <Webcam
-        audio={false}
-        onUserMedia={resizeCanvas}
-        ref={webcamRef}
-        videoConstraints={{ facingMode: "environment" }}
-        forceScreenshotSourceSize="true"
-        style={{
-          position: "fixed",
-          right: 0,
-          opacity: 0,
-        }}
-      />
-      <div className="w-full h-full flex justify-center items-center overflow-hidden">
-        <canvas
+    <div className="flex justify-center items-center bg-ccc h-full w-full">
+      <div className="fixed h-full w-full inset-0 overflow-hidden flex justify-center items-center">
+        <SCanvas
+          width={videoConstraints.width}
+          height={videoConstraints.height}
+          modifier={sizeModifier}
           ref={canvasRef}
-          style={{ transform: `scale(${sizeModifier})` }}
+          className="canvas"
         />
       </div>
+      <video
+        ref={videoRef}
+        style={{
+          transform: "scale(-1, 1)",
+          position: "fixed",
+          left: -10000,
+        }}
+      />
     </div>
   );
-}
+};
 
-export default Eurocentrism;
+export default KolarPage;
