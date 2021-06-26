@@ -3,20 +3,36 @@ import * as tf from "@tensorflow/tfjs";
 import * as cocossd from "@tensorflow-models/coco-ssd";
 import Webcam from "react-webcam";
 import useAnimationFrame from "../components/Hooks/useAnimationFrame";
+import useWindowsSize from "../components/Hooks/useWindowsSize";
 
 function Eurocentrism() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const [detections, setDetections] = useState([]);
+  const [sizeModifier, setSizeModifier] = useState(1);
+  const { width, height } = useWindowsSize();
 
   useEffect(() => {
     runCoco();
   }, []);
-  // Main function
+
+  useEffect(() => {
+    if (webcamRef?.current?.video) resizeCanvas();
+  }, [width, height, webcamRef]);
+
+  const resizeCanvas = (a) => {
+    console.log("argument", a);
+    const { videoWidth, videoHeight } = webcamRef.current.video;
+    if (videoWidth && videoHeight) {
+      const aspectRatio = videoWidth / videoHeight;
+      const multiplicador =
+        aspectRatio > 1 ? width / videoWidth : height / videoHeight;
+      setSizeModifier(multiplicador);
+    }
+  };
+
   const runCoco = async () => {
     const net = await cocossd.load();
-    console.log("Handpose model loaded.");
-    //  Loop and detect hands
     setInterval(() => {
       detect(net);
     }, 10);
@@ -31,16 +47,6 @@ function Eurocentrism() {
     ) {
       // Get Video Properties
       const video = webcamRef.current.video;
-      const videoWidth = webcamRef.current.video.videoWidth;
-      const videoHeight = webcamRef.current.video.videoHeight;
-
-      // Set video width
-      webcamRef.current.video.width = videoWidth;
-      webcamRef.current.video.height = videoHeight;
-
-      // Set canvas height and width
-      canvasRef.current.width = videoWidth;
-      canvasRef.current.height = videoHeight;
 
       // Make Detections
       const predictions = await net.detect(video);
@@ -59,7 +65,16 @@ function Eurocentrism() {
     const videoInput = webcamRef.current.video;
     const canvas = canvasRef.current;
     if (!canvas || !videoInput) return;
+
+    // Set canvas height and width
+    const { videoWidth, videoHeight } = videoInput;
+    canvas.width = videoWidth;
+    canvas.height = videoHeight;
+
     const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(videoInput, 0, 0);
+
     detections &&
       !!detections.length &&
       detections.forEach((prediction) => {
@@ -82,40 +97,25 @@ function Eurocentrism() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <Webcam
-          ref={webcamRef}
-          muted={true}
-          videoConstraints={{ facingMode: "environment" }}
-          style={{
-            position: "absolute",
-            marginLeft: "auto",
-            marginRight: "auto",
-            left: 0,
-            right: 0,
-            textAlign: "center",
-            zindex: 9,
-            width: 640,
-            height: 480,
-          }}
-        />
-
+    <div className="w-full h-full">
+      <Webcam
+        audio={false}
+        onUserMedia={resizeCanvas}
+        ref={webcamRef}
+        videoConstraints={{ facingMode: "environment" }}
+        forceScreenshotSourceSize="true"
+        style={{
+          position: "fixed",
+          right: 0,
+          opacity: 0,
+        }}
+      />
+      <div className="w-full h-full flex justify-center items-center overflow-hidden">
         <canvas
           ref={canvasRef}
-          style={{
-            position: "absolute",
-            marginLeft: "auto",
-            marginRight: "auto",
-            left: 0,
-            right: 0,
-            textAlign: "center",
-            zindex: 8,
-            width: 640,
-            height: 480,
-          }}
+          style={{ transform: `scale(${sizeModifier})` }}
         />
-      </header>
+      </div>
     </div>
   );
 }
