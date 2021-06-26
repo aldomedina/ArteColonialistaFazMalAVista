@@ -87,6 +87,7 @@ function Eurocentrism() {
         <Webcam
           ref={webcamRef}
           muted={true}
+          videoConstraints={{ facingMode: "environment" }}
           style={{
             position: "absolute",
             marginLeft: "auto",
