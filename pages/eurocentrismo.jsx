@@ -4,6 +4,7 @@ import * as cocossd from "@tensorflow-models/coco-ssd";
 import styled from "styled-components";
 import Webcam from "react-webcam";
 import useAnimationFrame from "../components/Hooks/useAnimationFrame";
+import { createFloydSteinbergCanvas } from "../components/Draws/FloydSteinberg";
 
 const SCanvas = styled.canvas`
   transform: ${({ modifier }) => `scale(${modifier})`};
@@ -54,6 +55,7 @@ const KolarPage = () => {
       detect(net);
     }, 10);
   };
+
   const detect = async (net) => {
     if (typeof videoRef.current !== "undefined" && videoRef.current !== null) {
       const predictions = await net.detect(videoRef.current);
@@ -67,11 +69,13 @@ const KolarPage = () => {
     if (!canvasRef || !videoRef) return;
     const videoInput = videoRef.current;
     const canvas = canvasRef.current;
+
     if (!canvas || !videoInput) return;
     const ctx = canvas.getContext("2d");
-
+    const { width, height } = canvas;
     ctx.drawImage(videoInput, 0, 0);
-
+    const pixelatedCanvas = createFloydSteinbergCanvas(canvas, 10);
+    ctx.drawImage(pixelatedCanvas, 0, 0, width, height);
     detections &&
       !!detections.length &&
       detections.forEach((prediction) => {
@@ -80,9 +84,9 @@ const KolarPage = () => {
         const text = prediction["class"];
 
         // Set styling
-        const color = Math.floor(Math.random() * 16777215).toString(16);
-        ctx.strokeStyle = "#" + color;
-        ctx.font = "18px Arial";
+        const color = "green";
+        ctx.strokeStyle = color;
+        ctx.font = "18px Mondwest";
 
         // Draw rectangles and text
         ctx.beginPath();
