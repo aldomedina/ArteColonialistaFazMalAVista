@@ -89,12 +89,7 @@ const EurocentrismPage = () => {
     // draw
     detections &&
       !!detections.length &&
-      detections.forEach((el, i) => {
-        const tag = el.class === "person" ? "Savage" : `Loot: ${el.class} `;
-        const text = "subject " + (i + 1) + ". " + tag;
-        ctx.fillStyle = "#000000";
-        ctx.font = "18px";
-        ctx.fillText(text, el.bbox[0], el.bbox[1] - 2);
+      detections.forEach((el, i) =>
         ctx.drawImage(
           pixelatedCanvas,
           el.bbox[0],
@@ -105,8 +100,8 @@ const EurocentrismPage = () => {
           el.bbox[1],
           el.bbox[2],
           el.bbox[3]
-        );
-      });
+        )
+      );
   };
 
   // Prints
