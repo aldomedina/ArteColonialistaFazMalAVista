@@ -88,6 +88,11 @@ const EurocentrismPage = () => {
     detections &&
       !!detections.length &&
       detections.forEach((el, i) => {
+        const text = "subject " + (i + 1) + ". " + el["class"];
+        ctx.fillStyle = "#000000";
+        ctx.textAlign = "center";
+        ctx.font = "18px Arial";
+        ctx.fillText(text, el.bbox[2] / 2, 20);
         ctx.drawImage(
           pixelatedCanvas,
           el.bbox[0],
@@ -95,7 +100,7 @@ const EurocentrismPage = () => {
           el.bbox[2],
           el.bbox[3],
           10,
-          10,
+          22,
           el.bbox[2],
           el.bbox[3]
         );
@@ -121,7 +126,7 @@ const EurocentrismPage = () => {
           left: -10000,
         }}
       />
-      <div className="w-full text-white fixed top-0 left-0 text-lg">
+      <div className="w-full text-white fixed top-0 left-0 text-lg z-30">
         <h1 className="px-1 py-1">A ARTE COLONIALISTA FAZ MAL A VISTA</h1>
       </div>
     </div>

@@ -3,7 +3,7 @@ import React from "react";
 const BottomTitle = ({ bg }) => {
   return (
     <div
-      className={`fixed bottom-0 left-0 px-05 py-05 w-full ${
+      className={`fixed bottom-0 left-0 px-05 py-05 w-full text-lg ${
         bg ? "bg-white" : "text-white"
       }`}
     >
