@@ -87,7 +87,6 @@ const EurocentrismPage = () => {
     let FIX_HEIGHT = (height - gap * (maxLines + 1)) / maxLines;
 
     // draw
-    let currentLines = 0;
     detections &&
       !!detections.length &&
       detections.forEach((el, i) => {
@@ -95,8 +94,8 @@ const EurocentrismPage = () => {
         const text = "subject " + (i + 1) + ". " + tag;
         ctx.fillStyle = "#000000";
         ctx.textAlign = "center";
-        ctx.font = "18px Arial";
-        ctx.fillText(text, el.bbox[2] / 2, 20);
+        ctx.font = "18px currier";
+        ctx.fillText(text, el.bbox[2] / 2, el.bbox[1] - 5);
         ctx.drawImage(
           pixelatedCanvas,
           el.bbox[0],
