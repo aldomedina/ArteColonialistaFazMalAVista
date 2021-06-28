@@ -43,9 +43,10 @@ const EurocentrismPage = () => {
     if (typeof window !== "undefined") {
       const { innerWidth, innerHeight } = window;
       const { height, width, aspectRatio } = videoConstraints;
-      aspectRatio > 1
-        ? setSizeModifier(innerWidth / width)
-        : setSizeModifier(innerHeight / height);
+      setSizeModifier({
+        width: innerWidth / width,
+        height: innerHeight / height,
+      });
     }
   }, [videoConstraints]);
 
@@ -53,7 +54,7 @@ const EurocentrismPage = () => {
     const net = await cocossd.load();
     setInterval(() => {
       detect(net);
-    }, 300);
+    }, 1500);
   };
 
   const detect = async (net) => {
@@ -75,25 +76,29 @@ const EurocentrismPage = () => {
     const { width, height } = canvas;
     ctx.drawImage(videoInput, 0, 0);
     const pixelatedCanvas = createFloydSteinbergCanvas(canvas, 10);
-    ctx.drawImage(pixelatedCanvas, 0, 0, width, height);
+    ctx.fillStyle = "#CCC";
+    ctx.fillRect(0, 0, width, height);
+    // intervention settings
+    let gap = 10;
+    let maxLines = 10;
+    let FIX_HEIGHT = (height - gap * (maxLines + 1)) / maxLines;
+
+    // draw
+    let currentLines = 0;
     detections &&
       !!detections.length &&
-      detections.forEach((prediction) => {
-        // Extract boxes and classes
-        const [x, y, width, height] = prediction["bbox"];
-        const text = prediction["class"];
-
-        // Set styling
-        const color = "green";
-        ctx.strokeStyle = color;
-        ctx.font = "18px Mondwest";
-
-        // Draw rectangles and text
-        ctx.beginPath();
-        ctx.fillStyle = "#" + color;
-        ctx.fillText(text, x, y);
-        ctx.rect(x, y, width, height);
-        ctx.stroke();
+      detections.forEach((el, i) => {
+        ctx.drawImage(
+          pixelatedCanvas,
+          el.bbox[0],
+          el.bbox[1],
+          el.bbox[2],
+          el.bbox[3],
+          10,
+          10,
+          el.bbox[2],
+          el.bbox[3]
+        );
       });
   };
 
@@ -116,6 +121,9 @@ const EurocentrismPage = () => {
           left: -10000,
         }}
       />
+      <div className="w-full text-white fixed top-0 left-0 text-lg">
+        <h1 className="px-1 py-1">A ARTE COLONIALISTA FAZ MAL A VISTA</h1>
+      </div>
     </div>
   );
 };
