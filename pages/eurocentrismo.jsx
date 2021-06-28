@@ -93,8 +93,7 @@ const EurocentrismPage = () => {
         const tag = el.class === "person" ? "Savage" : `Loot: ${el.class} `;
         const text = "subject " + (i + 1) + ". " + tag;
         ctx.fillStyle = "#000000";
-        ctx.textAlign = "center";
-        ctx.font = "18px currier";
+        ctx.font = "18px";
         ctx.fillText(text, el.bbox[0], el.bbox[1] - 2);
         ctx.drawImage(
           pixelatedCanvas,
