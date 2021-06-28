@@ -11,7 +11,14 @@ body,
 #__next {
   height: 100%;
 }
+table {
+  width: 100%;
+}
 
+th {
+  border-bottom: 1px solid white;
+  border-collapse: collapse;
+}
 html,
 body {
   padding: 0;
@@ -40,6 +47,9 @@ a {
 }
 .items-start {
   align-items: flex-start;
+}
+.items-end {
+  align-items: flex-end;
 }
 .bg-ccc {
   background-color: #ccc;
@@ -130,6 +140,11 @@ a {
   padding-top: 5rem;
   padding-bottom: 5rem;
 }
+
+.mr-1 {
+  margin-right: 1rem;
+}
+
 .pixelate {
   font-family: Mondwest;
   letter-spacing: 2px;

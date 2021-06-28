@@ -6,3 +6,8 @@ export const shuffleArray = (o) => {
   );
   return o;
 };
+
+export const getRandomInt = (max) => Math.floor(Math.random() * max);
+
+export const getTime = (date) =>
+  `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;

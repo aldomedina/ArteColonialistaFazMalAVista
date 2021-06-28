@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as cocossd from "@tensorflow-models/coco-ssd";
 import styled from "styled-components";
 import Webcam from "react-webcam";
 import useAnimationFrame from "../components/Hooks/useAnimationFrame";
+import Prints from "../components/Prints";
 import { createFloydSteinbergCanvas } from "../components/Draws/FloydSteinberg";
 
 const SCanvas = styled.canvas`
@@ -16,6 +17,8 @@ const EurocentrismPage = () => {
   const [videoConstraints, setVideoConstraints] = useState({});
   const [sizeModifier, setSizeModifier] = useState(1);
   const [detections, setDetections] = useState([]);
+  const [prints, setPrints] = useState([]);
+  const todaysDate = new Date();
 
   useEffect(() => {
     navigator?.mediaDevices
@@ -88,7 +91,8 @@ const EurocentrismPage = () => {
     detections &&
       !!detections.length &&
       detections.forEach((el, i) => {
-        const text = "subject " + (i + 1) + ". " + el["class"];
+        const tag = el.class === "person" ? "Savage" : "Loot";
+        const text = "subject " + (i + 1) + ". " + tag;
         ctx.fillStyle = "#000000";
         ctx.textAlign = "center";
         ctx.font = "18px Arial";
@@ -106,6 +110,22 @@ const EurocentrismPage = () => {
         );
       });
   };
+
+  // Prints
+  useMemo(() => {
+    if (detections.length) {
+      const printsCopy = [...prints];
+      detections.map((det) => {
+        printsCopy.length + 1 > 10 && printsCopy.pop();
+        printsCopy.push({
+          date: new Date(),
+          score: det.score,
+          class: det.class,
+        });
+      });
+      setPrints(printsCopy);
+    }
+  }, [detections]);
 
   return (
     <div className="flex justify-center items-center bg-ccc h-full w-full">
@@ -127,7 +147,10 @@ const EurocentrismPage = () => {
         }}
       />
       <div className="w-full text-white fixed top-0 left-0 text-lg z-30">
-        <h1 className="px-1 py-1">A ARTE COLONIALISTA FAZ MAL A VISTA</h1>
+        <h1>A ARTE COLONIALISTA FAZ MAL A VISTA</h1>
+      </div>
+      <div className="fixed left-0 top-0 w-full h-full flex items-end  py-1 ">
+        <Prints data={prints} />
       </div>
     </div>
   );
