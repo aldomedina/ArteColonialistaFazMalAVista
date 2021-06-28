@@ -115,7 +115,7 @@ const EurocentrismPage = () => {
     if (detections.length) {
       const printsCopy = [...prints];
       detections.map((det) => {
-        printsCopy.length + 1 > 10 && printsCopy.pop();
+        printsCopy.length + 1 > 10 && printsCopy.shift();
         printsCopy.push({
           date: new Date(),
           score: det.score,
