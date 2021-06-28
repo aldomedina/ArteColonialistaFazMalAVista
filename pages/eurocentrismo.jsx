@@ -10,7 +10,7 @@ const SCanvas = styled.canvas`
   transform: ${({ modifier }) => `scale(${modifier})`};
 `;
 
-const KolarPage = () => {
+const EurocentrismPage = () => {
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
   const [videoConstraints, setVideoConstraints] = useState({});
@@ -53,7 +53,7 @@ const KolarPage = () => {
     const net = await cocossd.load();
     setInterval(() => {
       detect(net);
-    }, 10);
+    }, 300);
   };
 
   const detect = async (net) => {
@@ -120,4 +120,4 @@ const KolarPage = () => {
   );
 };
 
-export default KolarPage;
+export default EurocentrismPage;
