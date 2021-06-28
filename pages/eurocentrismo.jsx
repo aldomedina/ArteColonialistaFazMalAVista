@@ -103,8 +103,8 @@ const EurocentrismPage = () => {
           el.bbox[1],
           el.bbox[2],
           el.bbox[3],
-          10,
-          22,
+          el.bbox[0],
+          el.bbox[1],
           el.bbox[2],
           el.bbox[3]
         );
