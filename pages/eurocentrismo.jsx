@@ -90,12 +90,12 @@ const EurocentrismPage = () => {
     detections &&
       !!detections.length &&
       detections.forEach((el, i) => {
-        const tag = el.class === "person" ? "Savage" : "Loot";
+        const tag = el.class === "person" ? "Savage" : `Loot: ${el.class} `;
         const text = "subject " + (i + 1) + ". " + tag;
         ctx.fillStyle = "#000000";
         ctx.textAlign = "center";
         ctx.font = "18px currier";
-        ctx.fillText(text, el.bbox[2] / 2, el.bbox[1] - 5);
+        ctx.fillText(text, el.bbox[0], el.bbox[1] - 2);
         ctx.drawImage(
           pixelatedCanvas,
           el.bbox[0],
