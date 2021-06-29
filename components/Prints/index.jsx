@@ -2,15 +2,22 @@ import { getRandomInt, getTime } from "../../utils";
 import styled from "styled-components";
 
 const descriptions = [
-  "Potential Slave",
+  "Potential Slave, maybe ",
   "Mercancy vibes",
   "Could be a good exportation",
   "Skin problems",
+  "No soul for sure",
+  "Savage, but maybe with a soul",
+  "Good and talented servant",
+  "I will call you... indian",
 ];
 
 const descriptionsThings = [
   "Shall be deliver to the King",
-  "A good present to the church",
+  "How splendid! new exotic piece for my museum",
+  "LOOOOOOOT!!!!",
+  "Kind of shine, might be gold? mine!",
+  "From now own that's mine",
 ];
 
 const Prints = ({ data }) => {
@@ -62,7 +69,9 @@ const Prints = ({ data }) => {
                 {el.score.toLocaleString("en", { style: "percent" })}
               </th>
               <th style={{ textAlign: "left", verticalAlign: "top" }}>
-                <span>{el.class === "person" ? "Savage - " : "Loot - "}</span>
+                <span>
+                  {el.class === "person" ? "Savage - " : `Exotic ${el.class}`}
+                </span>
                 {el.class === "person"
                   ? descriptions[getRandomInt(descriptions.length)]
                   : descriptionsThings[getRandomInt(descriptionsThings.length)]}

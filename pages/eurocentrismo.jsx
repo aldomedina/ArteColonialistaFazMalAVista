@@ -14,6 +14,8 @@ const SCanvas = styled.canvas`
     `scale(${modifier.aspectRatio > 1 ? modifier.width : modifier.height})`};
 `;
 
+const bgColor = "#BBB";
+
 const EurocentrismPage = () => {
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
@@ -82,18 +84,25 @@ const EurocentrismPage = () => {
     const ctx = canvas.getContext("2d");
     const { width, height } = canvas;
     ctx.drawImage(videoInput, 0, 0);
-    const pixelatedCanvas = createFloydSteinbergCanvas(canvas, 10);
-    ctx.fillStyle = "#BBB";
+    const color = {
+      r: 108,
+      g: 245,
+      b: 189,
+    };
+    const pixelatedCanvas = createFloydSteinbergCanvas(canvas, color);
+    ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, width, height);
 
     // draw
-    ctx.fillStyle = "#6CF5BD";
+    ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
     detections &&
       !!detections.length &&
       detections.forEach((prediction, i) => {
         const [x, y, w, h] = prediction["bbox"];
         const text =
-          prediction["class"] === "person" ? "savage" : prediction["class"];
+          prediction["class"] === "person"
+            ? "savage"
+            : `exotic ${prediction["class"]}`;
         ctx.font = "18px";
         ctx.fillText(text, x, y);
         ctx.drawImage(
@@ -128,7 +137,10 @@ const EurocentrismPage = () => {
   }, [detections]);
 
   return (
-    <div className="flex justify-center items-center bg-ccc h-full w-full">
+    <div
+      style={{ backgroundColor: bgColor }}
+      className="flex justify-center items-center h-full w-full"
+    >
       <div className="fixed h-full w-full inset-0 overflow-hidden flex justify-center items-center">
         <SCanvas
           aspectRatio={videoConstraints.aspectRatio}

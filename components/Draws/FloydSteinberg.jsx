@@ -1,4 +1,4 @@
-export const createFloydSteinbergCanvas = (inputCanvas, errorMultiplier) => {
+export const createFloydSteinbergCanvas = (inputCanvas, color) => {
   const inputCtx = inputCanvas.getContext("2d");
   const { width: inputW, height: inputH } = inputCanvas;
 
@@ -9,12 +9,12 @@ export const createFloydSteinbergCanvas = (inputCanvas, errorMultiplier) => {
 
   let imgData = inputCtx.getImageData(0, 0, inputW, inputH);
 
-  let newImageData = bayerFilter(imgData, 120);
+  let newImageData = bayerFilter(imgData, 120, color);
   outputCtx.putImageData(newImageData, 0, 0);
   return outputCanvas;
 };
 
-function bayerFilter(imageData, threshold) {
+function bayerFilter(imageData, threshold, color) {
   var bayerThresholdMap = [
     [15, 135, 45, 165],
     [195, 75, 225, 105],
@@ -36,9 +36,10 @@ function bayerFilter(imageData, threshold) {
       (imageData.data[currentPixel] + bayerThresholdMap[x % 4][y % 4]) / 2
     );
     const show = map < threshold;
-    imageData.data[currentPixel] = show ? 255 : 108;
-    imageData.data[currentPixel + 1] = show ? 255 : 245;
-    imageData.data[currentPixel + 2] = show ? 255 : 189;
+
+    imageData.data[currentPixel] = show ? 255 : color.r;
+    imageData.data[currentPixel + 1] = show ? 255 : color.g;
+    imageData.data[currentPixel + 2] = show ? 255 : color.b;
     imageData.data[currentPixel + 3] = show ? 0 : 250;
   }
 
