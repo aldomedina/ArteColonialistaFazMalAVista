@@ -90,8 +90,8 @@ const EurocentrismPage = () => {
       b: 189,
     };
     const pixelatedCanvas = createFloydSteinbergCanvas(canvas, color);
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(0, 0, width, height);
+    // ctx.fillStyle = bgColor;
+    // ctx.fillRect(0, 0, width, height);
 
     // draw
     ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
