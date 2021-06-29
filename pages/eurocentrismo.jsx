@@ -167,7 +167,13 @@ const EurocentrismPage = () => {
       </div>
       {isModelLoading && (
         <div className="bg-ccc fixed left-0 top-0 w-full h-full flex items-center justify-center z-40">
-          <div>loading</div>
+          <svg
+            className="loader-svg"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="50" cy="50" r="45" />
+          </svg>
         </div>
       )}
     </div>
