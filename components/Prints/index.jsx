@@ -1,5 +1,4 @@
 import { getRandomInt, getTime } from "../../utils";
-import styled from "styled-components";
 
 const descriptions = [
   "Potential Slave, maybe ",
@@ -8,7 +7,7 @@ const descriptions = [
   "Skin problems",
   "No soul for sure",
   "Savage, but maybe with a soul",
-  "Good and talented servant",
+  "Looks like a good and talented servant",
   "I will call you... indian",
 ];
 
@@ -23,7 +22,7 @@ const descriptionsThings = [
 const Prints = ({ data }) => {
   return (
     <div className="w-full text-white">
-      <table className="max-w-content">
+      <table style={{ fontFamily: "monospace" }} className="max-w-content">
         <thead>
           <tr>
             <th
@@ -43,7 +42,7 @@ const Prints = ({ data }) => {
                 paddingRight: ".2rem",
               }}
             >
-              Accuracy
+              Acc.
             </th>
             <th style={{ textAlign: "left", verticalAlign: "top" }}>
               Colonialist Depiction
