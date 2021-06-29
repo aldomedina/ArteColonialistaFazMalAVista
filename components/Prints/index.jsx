@@ -70,7 +70,7 @@ const Prints = ({ data }) => {
               </th>
               <th style={{ textAlign: "left", verticalAlign: "top" }}>
                 <span>
-                  {el.class === "person" ? "Savage - " : `Exotic ${el.class}`}
+                  {el.class === "person" ? "Savage - " : `Exotic ${el.class}: `}
                 </span>
                 {el.class === "person"
                   ? descriptions[getRandomInt(descriptions.length)]
