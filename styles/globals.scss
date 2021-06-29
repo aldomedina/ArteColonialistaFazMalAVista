@@ -15,10 +15,6 @@ table {
   width: 100%;
 }
 
-th {
-  border-bottom: 1px solid white;
-  border-collapse: collapse;
-}
 html,
 body {
   padding: 0;
@@ -52,13 +48,16 @@ a {
   align-items: flex-end;
 }
 .bg-ccc {
-  background-color: #ccc;
+  background-color: #bbb;
 }
 .h-full {
   height: 100%;
 }
 .w-full {
   width: 100%;
+}
+.max-w-content {
+  max-width: max-content;
 }
 .gap-1 {
   gap: 1rem;
@@ -163,6 +162,9 @@ a {
 .text-lg {
   font-size: 1.5rem;
 }
+.text-xl {
+  font-size: 1.8rem;
+}
 h1 {
   margin: 0;
 }
@@ -175,4 +177,7 @@ h1 {
 }
 .z-30 {
   z-index: 30;
+}
+.z-40 {
+  z-index: 40;
 }

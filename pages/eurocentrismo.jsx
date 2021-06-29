@@ -8,7 +8,10 @@ import Prints from "../components/Prints";
 import { createFloydSteinbergCanvas } from "../components/Draws/FloydSteinberg";
 
 const SCanvas = styled.canvas`
-  transform: ${({ modifier }) => `scale(${modifier})`};
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
+  transform: ${({ modifier }) =>
+    `scale(${modifier.aspectRatio > 1 ? modifier.width : modifier.height})`};
 `;
 
 const EurocentrismPage = () => {
@@ -18,7 +21,7 @@ const EurocentrismPage = () => {
   const [sizeModifier, setSizeModifier] = useState(1);
   const [detections, setDetections] = useState([]);
   const [prints, setPrints] = useState([]);
-  const todaysDate = new Date();
+  const [isModelLoading, setIsModelLoading] = useState(true);
 
   useEffect(() => {
     navigator?.mediaDevices
@@ -35,26 +38,27 @@ const EurocentrismPage = () => {
         const { height, width, aspectRatio } = stream
           .getVideoTracks()[0]
           .getSettings();
-        setVideoConstraints({ height, width, aspectRatio });
-        runCoco();
+        setVideoConstraints({ height, width });
       });
   }, []);
 
   useEffect(() => {
-    const { width: inputW, height: inputH } = canvasRef.current;
-
     if (typeof window !== "undefined") {
       const { innerWidth, innerHeight } = window;
       const { height, width, aspectRatio } = videoConstraints;
       setSizeModifier({
         width: innerWidth / width,
         height: innerHeight / height,
+        aspectRatio: innerWidth / innerHeight,
       });
+      videoRef.current.addEventListener("loadeddata", runCoco);
+      return () => videoRef.current.removeEventListener("loadeddata", runCoco);
     }
   }, [videoConstraints]);
 
   const runCoco = async () => {
     const net = await cocossd.load();
+    setIsModelLoading(false);
     setInterval(() => {
       detect(net);
     }, 1500);
@@ -79,29 +83,31 @@ const EurocentrismPage = () => {
     const { width, height } = canvas;
     ctx.drawImage(videoInput, 0, 0);
     const pixelatedCanvas = createFloydSteinbergCanvas(canvas, 10);
-    ctx.fillStyle = "#CCC";
+    ctx.fillStyle = "#BBB";
     ctx.fillRect(0, 0, width, height);
-    // intervention settings
-    let gap = 10;
-    let maxLines = 10;
-    let FIX_HEIGHT = (height - gap * (maxLines + 1)) / maxLines;
 
     // draw
+    ctx.fillStyle = "#6CF5BD";
     detections &&
       !!detections.length &&
-      detections.forEach((el, i) =>
+      detections.forEach((prediction, i) => {
+        const [x, y, w, h] = prediction["bbox"];
+        const text =
+          prediction["class"] === "person" ? "savage" : prediction["class"];
+        ctx.font = "18px";
+        ctx.fillText(text, x, y);
         ctx.drawImage(
           pixelatedCanvas,
-          el.bbox[0],
-          el.bbox[1],
-          el.bbox[2],
-          el.bbox[3],
-          el.bbox[0],
-          el.bbox[1],
-          el.bbox[2],
-          el.bbox[3]
-        )
-      );
+          x, // x
+          y, // y
+          w, // width
+          h, // height
+          x, // x
+          y, // y
+          w, // width
+          h // height
+        );
+      });
   };
 
   // Prints
@@ -109,6 +115,7 @@ const EurocentrismPage = () => {
     if (detections.length) {
       const printsCopy = [...prints];
       detections.map((det) => {
+        if (det.score < 0.75) return;
         printsCopy.length + 1 > 10 && printsCopy.shift();
         printsCopy.push({
           date: new Date(),
@@ -124,6 +131,7 @@ const EurocentrismPage = () => {
     <div className="flex justify-center items-center bg-ccc h-full w-full">
       <div className="fixed h-full w-full inset-0 overflow-hidden flex justify-center items-center">
         <SCanvas
+          aspectRatio={videoConstraints.aspectRatio}
           width={videoConstraints.width}
           height={videoConstraints.height}
           modifier={sizeModifier}
@@ -139,12 +147,17 @@ const EurocentrismPage = () => {
           left: -10000,
         }}
       />
-      <div className="w-full text-white fixed top-0 left-0 text-lg z-30">
-        <h1>A ARTE COLONIALISTA FAZ MAL A VISTA</h1>
+      <div className="w-full text-white fixed top-0 left-0 text-xl z-30">
+        <h1>COLONIALIST KNOWLEDGE PRODUCTION</h1>
       </div>
       <div className="fixed left-0 top-0 w-full h-full flex items-end  py-1 ">
         <Prints data={prints} />
       </div>
+      {isModelLoading && (
+        <div className="bg-ccc fixed left-0 top-0 w-full h-full flex items-center justify-center z-40">
+          <div>loading</div>
+        </div>
+      )}
     </div>
   );
 };

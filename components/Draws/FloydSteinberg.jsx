@@ -35,11 +35,11 @@ function bayerFilter(imageData, threshold) {
     var map = Math.floor(
       (imageData.data[currentPixel] + bayerThresholdMap[x % 4][y % 4]) / 2
     );
-    imageData.data[currentPixel] = map < threshold ? 0 : 255;
-    imageData.data[currentPixel + 3] = map < threshold ? 250 : 0;
-    // Set g and b pixels equal to r
-    imageData.data[currentPixel + 1] = imageData.data[currentPixel + 2] =
-      imageData.data[currentPixel];
+    const show = map < threshold;
+    imageData.data[currentPixel] = show ? 255 : 108;
+    imageData.data[currentPixel + 1] = show ? 255 : 245;
+    imageData.data[currentPixel + 2] = show ? 255 : 189;
+    imageData.data[currentPixel + 3] = show ? 0 : 250;
   }
 
   return imageData;
