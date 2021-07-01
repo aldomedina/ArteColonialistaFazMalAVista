@@ -1,0 +1,87 @@
+// POSITIONING
+.fixed {
+  position: fixed;
+}
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
+.hidden {
+  display: none;
+}
+.flex {
+  display: flex;
+}
+.flex-1 {
+  flex-grow: 1;
+}
+.flex-col {
+  flex-direction: column;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.items-center {
+  align-items: center;
+}
+.items-start {
+  align-items: flex-start;
+}
+.items-end {
+  align-items: flex-end;
+}
+.align-self-center {
+  align-self: center;
+}
+.align-self-end {
+  align-self: flex-end;
+}
+.bg-ccc {
+  background-color: #bbb;
+}
+
+.gap-1 {
+  gap: 1rem;
+}
+.gap-2 {
+  gap: 2rem;
+}
+.gap-3 {
+  gap: 3rem;
+}
+
+.inset-0 {
+  inset: 0;
+}
+.bottom-0 {
+  bottom: 0;
+}
+.bottom-50 {
+  bottom: 50px;
+}
+.left-0 {
+  left: 0;
+}
+.top-0 {
+  top: 0;
+}
+.left-5px {
+  left: 5px;
+}
+.top-5px {
+  top: 5px;
+}
+.right-0 {
+  right: 0px;
+}
+.right-50 {
+  right: 50px;
+}
+.overflow-hidden {
+  overflow: hidden;
+}

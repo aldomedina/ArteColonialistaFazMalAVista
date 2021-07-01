@@ -1,0 +1,23 @@
+// Buttons
+
+button {
+  border: none;
+  outline: none;
+  background: transparent;
+  text-transform: uppercase;
+  font-family: NeueBit;
+  max-width: max-content;
+  cursor: pointer;
+}
+
+.btn {
+  border: 4px solid black;
+  &-big {
+    font-size: 2.5rem;
+    padding: 1.3rem 1.8rem;
+  }
+  &-white {
+    color: white;
+    border-color: white !important;
+  }
+}

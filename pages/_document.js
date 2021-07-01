@@ -25,7 +25,7 @@ export default class MyDocument extends Document {
         <Head>
           <link
             rel="preload"
-            href="/fonts/Mondwest-Regular.ttf"
+            href="/fonts/NeueBit-Bold.ttf"
             as="font"
             crossOrigin=""
           />

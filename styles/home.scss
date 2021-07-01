@@ -1,0 +1,26 @@
+.home {
+  h1 {
+    width: calc(100vw - 10px);
+    font-size: 14vw;
+    @include respond(mobile) {
+      font-size: 17vw;
+    }
+
+    span {
+      &:first-child {
+        margin-left: 40px;
+      }
+    }
+  }
+
+  .big-title {
+    font-size: 21vw;
+    line-height: 0.6;
+    @include respond(mobile) {
+      font-size: 21.2vw;
+    }
+  }
+  &-canvas {
+    z-index: -1;
+  }
+}

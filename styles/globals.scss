@@ -1,15 +1,10 @@
-@font-face {
-  font-family: "Mondwest";
-  src: url("/fonts/Mondwest-Regular.otf");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
 html,
 body,
 #__next {
   height: 100%;
+  width: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 table {
   width: 100%;
@@ -19,7 +14,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Mondwest, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+  font-family: Alegreya, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
@@ -32,167 +27,36 @@ a {
   box-sizing: border-box;
 }
 
-.flex {
-  display: flex;
-}
-.flex-1 {
-  flex-grow: 1;
-}
-.flex-col {
-  flex-direction: column;
-}
-.justify-center {
-  justify-content: center;
-}
-.items-center {
-  align-items: center;
-}
-.items-start {
-  align-items: flex-start;
-}
-.items-end {
-  align-items: flex-end;
-}
-.bg-ccc {
-  background-color: #bbb;
-}
-.h-full {
-  height: 100%;
-}
-.w-full {
-  width: 100%;
-}
-.max-w-content {
-  max-width: max-content;
-}
-.gap-1 {
-  gap: 1rem;
-}
-.gap-2 {
-  gap: 2rem;
-}
-.gap-3 {
-  gap: 3rem;
-}
-
-.fixed {
-  position: fixed;
-}
-.inset-0 {
-  inset: 0;
-}
-.bottom-0 {
-  bottom: 0;
-}
-.left-0 {
-  left: 0;
-}
-.top-0 {
-  top: 0;
-}
-.bg-white {
-  background-color: #fff;
-}
-.overflow-hidden {
-  overflow: hidden;
-}
-
-.px-05 {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-.px-1 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-.px-2 {
-  padding-left: 2rem;
-  padding-right: 2rem;
-}
-.px-3 {
-  padding-left: 3rem;
-  padding-right: 3rem;
-}
-.px-4 {
-  padding-left: 4rem;
-  padding-right: 4rem;
-}
-.px-5 {
-  padding-left: 5rem;
-  padding-right: 5rem;
-}
-.py-05 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-.py-1 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-.py-2 {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-.py-3 {
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-}
-.py-4 {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-}
-.py-5 {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
-}
-
-.mr-1 {
-  margin-right: 1rem;
-}
-
-.pixelate {
-  font-family: Mondwest;
-  letter-spacing: 2px;
-}
-.uppercase {
-  text-transform: uppercase;
-}
-.text-white {
-  color: white;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-lg {
-  font-size: 1.5rem;
-}
-.text-xl {
-  font-size: 1.8rem;
-}
-h1 {
+ul {
+  list-style: none;
+  padding: 0;
   margin: 0;
 }
-
-.z-10 {
-  z-index: 10;
-}
-.z-20 {
-  z-index: 20;
-}
-.z-30 {
-  z-index: 30;
-}
-.z-40 {
-  z-index: 40;
+button {
+  padding: 0;
 }
 
-.border-r-1 {
-  border-right: 1px solid black;
+.menu {
+  font-family: NeueBit;
+  font-size: 2.5rem;
+  li {
+    margin-bottom: 5px;
+  }
+  button {
+    text-align: left;
+    font-family: NeueBit;
+    font-size: 2.5rem;
+    cursor: pointer;
+  }
 }
-.border-b-1 {
-  border-bottom: 1px solid black;
+.bonus-track {
+  .big-title {
+    font-size: 10vw;
+    margin-top: 5px;
+    @include respond(mobile) {
+      font-size: 17vw;
+    }
+  }
 }
 
 .loader-svg {
@@ -208,37 +72,5 @@ h1 {
     stroke-dashoffset: 280;
     stroke-width: 10px;
     transform-origin: 50% 50%;
-  }
-}
-
-// SVG animation.
-@keyframes svg-animation {
-  0% {
-    transform: rotateZ(0deg);
-  }
-  100% {
-    transform: rotateZ(360deg);
-  }
-}
-
-// Circle styles.
-
-// Circle animation.
-@keyframes circle-animation {
-  0%,
-  25% {
-    stroke-dashoffset: 280;
-    transform: rotate(0);
-  }
-
-  50%,
-  75% {
-    stroke-dashoffset: 75;
-    transform: rotate(45deg);
-  }
-
-  100% {
-    stroke-dashoffset: 280;
-    transform: rotate(360deg);
   }
 }
