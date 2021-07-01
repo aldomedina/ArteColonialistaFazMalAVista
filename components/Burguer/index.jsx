@@ -26,18 +26,20 @@ const Burger = () => {
   });
 
   return (
-    <svg
-      onClick={() => setSection(activeSection === "menu" ? "main" : "menu")}
-      width="40"
-      height="33"
-      viewBox="0 0 44 44"
-      fill="#000"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <animated.rect width="40" height="6" style={first} />
-      <animated.rect width="40" height="6" style={second} />
-      <animated.rect width="40" height="6" style={third} />
-    </svg>
+    <button>
+      <svg
+        onClick={() => setSection(activeSection === "menu" ? "main" : "menu")}
+        width="40"
+        height="33"
+        viewBox="0 0 44 44"
+        fill="#000"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <animated.rect width="40" height="6" style={first} />
+        <animated.rect width="40" height="6" style={second} />
+        <animated.rect width="40" height="6" style={third} />
+      </svg>
+    </button>
   );
 };
 

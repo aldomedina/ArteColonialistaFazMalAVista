@@ -31,8 +31,16 @@ const Layout = ({ children }) => {
           className="menu p-5px h-full flex flex-col justify-between bg-black text-white"
         >
           <ul className="flex flex-col">
-            <Link href="/">HOME</Link>
-            <Link href="/projeto">O PROJETO</Link>
+            <li>
+              <Link href="/">
+                <span onClick={() => setSection("main")}>HOME</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/projeto">
+                <span onClick={() => setSection("main")}>O PROJETO</span>
+              </Link>
+            </li>
             <li>
               A PESQUISA
               <img src={downloadIcon} alt="download-icon" className="ml-05" />

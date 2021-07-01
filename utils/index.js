@@ -23,6 +23,8 @@ export const createCanvasFromCoverImg = (img, inputW, inputH) => {
   if (scale * img.width < min_w) {
     scale = min_w / img.width;
   }
+  // TO DO: replicate css "bg-size: cover"
+  // ...
   const ctx = canvas.getContext("2d");
   ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, inputW, inputH);
   return canvas;

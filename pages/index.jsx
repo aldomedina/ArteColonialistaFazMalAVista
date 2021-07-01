@@ -19,7 +19,7 @@ export default function Home() {
               <span className="align-self-end"> à vista</span>
             </h1>
           </div>
-          <Link href="/kolar">
+          <Link href="/faz-mal">
             <button className="btn btn-big align-self-end">START</button>
           </Link>
         </div>
