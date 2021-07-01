@@ -23,13 +23,6 @@ export const createCanvasFromCoverImg = (img, inputW, inputH) => {
   if (scale * img.width < min_w) {
     scale = min_w / img.width;
   }
-  console.log("img.width", img.width);
-  console.log("img.height", img.height);
-  console.log("inputW", inputW);
-  console.log("inputH", inputH);
-  console.log("scale_w", scale_w);
-  console.log("scale_h", scale_h);
-  console.log("scale", scale);
   const ctx = canvas.getContext("2d");
   ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, inputW, inputH);
   return canvas;
