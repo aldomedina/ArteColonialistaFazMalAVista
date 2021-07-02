@@ -35,7 +35,11 @@ ul {
 button {
   padding: 0;
 }
-
+.layout {
+  .horizontal-slider {
+    transform: translate3d(calc(-100vw - 230px), 0, 0);
+  }
+}
 .menu {
   font-family: NeueBit;
   font-size: 2.5rem;

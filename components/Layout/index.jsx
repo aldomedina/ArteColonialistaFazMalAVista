@@ -20,11 +20,15 @@ const Layout = ({ children }) => {
         ? -width
         : -(width + MENU_WIDTH)
     }px,0,0)`,
+    delay: 0,
   });
 
   return (
-    <div className="h-full max-w-screen overflow-hidden">
-      <animated.div style={slideTroughSections} className="h-full flex">
+    <div className="layout h-full max-w-screen overflow-hidden">
+      <animated.div
+        style={slideTroughSections}
+        className="horizontal-slider h-full flex"
+      >
         <BonusTrack />
         <nav
           style={{ minWidth: MENU_WIDTH }}
