@@ -13,6 +13,13 @@ const HomeCanvas = () => {
   const { width, height, isMobile } = useWindowSize();
 
   useEffect(() => {
+    drawCanvas();
+  }, []);
+  useEffect(() => {
+    drawCanvas();
+  }, [width, height]);
+
+  const drawCanvas = () => {
     if (!canvasRef || !imgRef || !width || !height) return;
     const canvas = canvasRef.current;
     const canvasImg = createCanvasFromCoverImg(imgRef.current, width, height);
@@ -72,7 +79,7 @@ const HomeCanvas = () => {
         yPos += pieceH;
       }
     }
-  }, [width, height]);
+  };
 
   return (
     <div className="home-canvas w-full h-full absolute inset-0 overflow-hidden">
