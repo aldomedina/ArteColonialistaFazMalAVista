@@ -32,7 +32,7 @@ const BonusTrack = () => {
         alt="colombot-image"
         className="absolute right-50 bottom-50"
       />
-      <Link href="/colombot">
+      <Link href="/eurocentrismo">
         <button className="btn btn-big btn-white align-self-end z-10">
           START
         </button>
