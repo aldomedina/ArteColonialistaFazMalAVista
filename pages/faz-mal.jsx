@@ -1,4 +1,8 @@
 import { useRef, useState, useEffect } from "react";
+import * as tf from "@tensorflow/tfjs";
+import * as tmImage from "@teachablemachine/image";
+import { useSpring, animated } from "react-spring";
+
 import Layout from "../components/Layout";
 import Burguer from "../components/Burguer";
 import useWindowSize from "../components/Hooks/useWindowsSize";
@@ -8,8 +12,14 @@ const FazMal = () => {
   const videoRef = useRef();
   const { width, height } = useWindowSize();
   const [videoLoaded, setVideoLoaded] = useState(false);
-
+  const [areMonuments, setAreMonuments] = useState(false);
+  const contentBoxProps = useSpring({
+    transform: `translate3d(0,${areMonuments ? "0vh" : "100vh"},0)`,
+  });
   useEffect(() => {
+    // load model
+    loadModel();
+    // load webcam
     navigator?.mediaDevices
       ?.getUserMedia({
         video: true,
@@ -21,12 +31,29 @@ const FazMal = () => {
       .then((stream) => {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
-        const { height, width, aspectRatio } = stream
-          .getVideoTracks()[0]
-          .getSettings();
         setVideoLoaded(true);
       });
   }, []);
+
+  const loadModel = async () => {
+    const URL = "https://teachablemachine.withgoogle.com/models/9illglVK0/";
+    const modelURL = URL + "model.json";
+    const metadataURL = URL + "metadata.json";
+    const model = await tmImage.load(modelURL, metadataURL);
+    setInterval(() => detect(model), 1000);
+  };
+
+  const detect = async (model) => {
+    if (!videoRef.current) return;
+    const prediction = await model.predict(videoRef.current);
+    if (
+      prediction[0].className === "5 fingers" &&
+      prediction[0].probability > 0.95
+    ) {
+      setAreMonuments(true);
+      clearInterval(detect);
+    }
+  };
 
   return (
     <Layout>
@@ -34,16 +61,21 @@ const FazMal = () => {
         <div className="absolute left-0 top-0 bg-white p-5px">
           <Burguer />
         </div>
-        <div className="h-full w-full p-5px overflow-y-auto">
+        <div
+          className={`h-full w-full p-5px ${
+            areMonuments ? "overflow-y-auto" : "overflow-hidden"
+          }`}
+        >
           {videoLoaded && (
             <VideoKolarCanvas
               videoRef={videoRef}
               screenW={width}
               screenH={height}
+              areMonuments={areMonuments}
             />
           )}
           <div className="h-full" />
-          <div className="content bg-white">
+          <animated.div style={contentBoxProps} className="content bg-white">
             <h1 className="big-title">A ARTE COLONIALISTA FAZ MAL À VISTA</h1>
             <p>
               Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ex quam
@@ -51,7 +83,7 @@ const FazMal = () => {
               ipsum possimus impedit consequatur sunt vitae alias deserunt
               tenetur. Vero, ad harum.
             </p>
-          </div>
+          </animated.div>
         </div>
       </div>
       <video

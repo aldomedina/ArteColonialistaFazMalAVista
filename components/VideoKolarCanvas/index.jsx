@@ -2,10 +2,12 @@ import { useRef, useEffect, useState } from "react";
 import { shuffleArray } from "../../utils";
 import useAnimationFrame from "../Hooks/useAnimationFrame";
 
-const VideoKolarCanvas = ({ videoRef, screenH, screenW }) => {
+const VideoKolarCanvas = ({ videoRef, screenH, screenW, areMonuments }) => {
   const canvasRef = useRef(null);
   const [pieces, setPieces] = useState([]);
   const [settings, setSettings] = useState({});
+  const [firstOrder, setFirstOrder] = useState([]);
+
   useEffect(() => {
     if (!canvasRef || !screenW || !screenH) return;
     const canvas = canvasRef.current;
@@ -21,7 +23,6 @@ const VideoKolarCanvas = ({ videoRef, screenH, screenW }) => {
     const yRows = canvasH / pieceW;
     const pieceH = canvasH / yRows;
     const puzzleW = pieceW * xRows;
-    console.log("test");
     let piece,
       xPos = 0,
       yPos = 0;
@@ -39,7 +40,8 @@ const VideoKolarCanvas = ({ videoRef, screenH, screenW }) => {
         yPos += pieceH;
       }
     }
-    setPieces(shuffleArray(copyPieces));
+    setFirstOrder(copyPieces);
+    setPieces(copyPieces);
     setSettings({
       canvasW,
       canvasH,
@@ -48,6 +50,13 @@ const VideoKolarCanvas = ({ videoRef, screenH, screenW }) => {
       puzzleW,
     });
   }, []);
+
+  useEffect(() => {
+    if (firstOrder.length && pieces.length) {
+      console.log("areMonuments", areMonuments);
+      areMonuments ? setPieces(shuffleArray(pieces)) : setPieces(firstOrder);
+    }
+  }, [areMonuments]);
 
   useAnimationFrame(() => grabFrame());
   let one = 1;
@@ -83,10 +92,10 @@ const VideoKolarCanvas = ({ videoRef, screenH, screenW }) => {
         yPos += pieceH;
       }
     }
-    if (one) {
-      console.log(pieces);
-    }
-    one = 0;
+    // if (one) {
+    //   console.log(pieces);
+    // }
+    // one = 0;
   };
 
   return <canvas className="absolute left-5 top-5 -z-10" ref={canvasRef} />;
