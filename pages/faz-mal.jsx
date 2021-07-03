@@ -47,7 +47,7 @@ const FazMal = () => {
     if (!videoRef.current) return;
     const prediction = await model.predict(videoRef.current);
     if (
-      prediction[0].className === "5 fingers" &&
+      prediction[0].className === "padrao" &&
       prediction[0].probability > 0.95
     ) {
       setAreMonuments(true);
