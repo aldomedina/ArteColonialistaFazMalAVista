@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as cocossd from "@tensorflow-models/coco-ssd";
 import styled from "styled-components";
-import Webcam from "react-webcam";
 import useAnimationFrame from "../components/Hooks/useAnimationFrame";
 import Prints from "../components/Prints";
 import { createFloydSteinbergCanvas } from "../components/Draws/FloydSteinberg";

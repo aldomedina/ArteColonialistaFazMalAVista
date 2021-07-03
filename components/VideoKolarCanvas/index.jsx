@@ -1,21 +1,38 @@
 import { useRef, useEffect, useState } from "react";
 import { shuffleArray } from "../../utils";
 import useAnimationFrame from "../Hooks/useAnimationFrame";
+import styled from "styled-components";
 
-const VideoKolarCanvas = ({ videoRef, screenH, screenW, areMonuments }) => {
+const SCanvas = styled.canvas`
+  transform: ${({ modifier }) =>
+    `scale(${modifier.aspectRatio > 1 ? modifier.width : modifier.height})`};
+`;
+
+const VideoKolarCanvas = ({
+  videoRef,
+  screenH,
+  screenW,
+  areMonuments,
+  videoConstraints,
+}) => {
   const canvasRef = useRef(null);
   const [pieces, setPieces] = useState([]);
   const [settings, setSettings] = useState({});
   const [firstOrder, setFirstOrder] = useState([]);
+  const [sizeModifier, setSizeModifier] = useState(1);
 
   useEffect(() => {
-    if (!canvasRef || !screenW || !screenH) return;
+    if (!canvasRef || !screenW || !screenH || !videoConstraints.width) return;
     const canvas = canvasRef.current;
-    const canvasW = screenW - 10;
-    const canvasH = screenH - 10;
+    console.log("video.width", videoConstraints.width);
+    const { width: canvasW, height: canvasH } = videoConstraints;
     canvas.width = canvasW;
     canvas.height = canvasH;
-
+    setSizeModifier({
+      width: screenW / canvasW,
+      height: screenH / canvasH,
+      aspectRatio: screenW / screenH,
+    });
     // settings
 
     const xRows = screenW < 768 ? 10 : 20;
@@ -59,7 +76,6 @@ const VideoKolarCanvas = ({ videoRef, screenH, screenW, areMonuments }) => {
   }, [areMonuments]);
 
   useAnimationFrame(() => grabFrame());
-  let one = 1;
   const grabFrame = () => {
     if (!canvasRef || !videoRef) return;
     const videoInput = videoRef.current;
@@ -92,13 +108,16 @@ const VideoKolarCanvas = ({ videoRef, screenH, screenW, areMonuments }) => {
         yPos += pieceH;
       }
     }
-    // if (one) {
-    //   console.log(pieces);
-    // }
-    // one = 0;
   };
 
-  return <canvas className="absolute left-5 top-5 -z-10" ref={canvasRef} />;
+  return (
+    <div
+      className="absolute left-5 top-5 flex justify-center items-center overflow-hidden"
+      style={{ height: screenH - 10, width: screenW - 10 }}
+    >
+      <SCanvas className="-z-10" ref={canvasRef} modifier={sizeModifier} />
+    </div>
+  );
 };
 
 export default VideoKolarCanvas;

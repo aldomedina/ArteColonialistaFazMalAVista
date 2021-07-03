@@ -13,6 +13,7 @@ const FazMal = () => {
   const { width, height } = useWindowSize();
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [areMonuments, setAreMonuments] = useState(false);
+  const [videoConstraints, setVideoConstraints] = useState({});
   const contentBoxProps = useSpring({
     transform: `translate3d(0,${areMonuments ? "0vh" : "100vh"},0)`,
   });
@@ -31,6 +32,10 @@ const FazMal = () => {
       .then((stream) => {
         videoRef.current.srcObject = stream;
         videoRef.current.play();
+        const { height, width, aspectRatio } = stream
+          .getVideoTracks()[0]
+          .getSettings();
+        setVideoConstraints({ height, width, aspectRatio });
         setVideoLoaded(true);
       });
   }, []);
@@ -58,7 +63,7 @@ const FazMal = () => {
   return (
     <Layout>
       <div className="faz-mal h-full relative" style={{ minWidth: width }}>
-        <div className="absolute left-0 top-0 bg-white p-5px">
+        <div className="absolute left-0 top-0 bg-white p-5px z-10">
           <Burguer />
         </div>
         <div
@@ -72,6 +77,7 @@ const FazMal = () => {
               screenW={width}
               screenH={height}
               areMonuments={areMonuments}
+              videoConstraints={videoConstraints}
             />
           )}
           <div className="h-full" />
