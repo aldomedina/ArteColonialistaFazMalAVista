@@ -24,15 +24,21 @@ const VideoKolarCanvas = ({
   useEffect(() => {
     if (!canvasRef || !screenW || !screenH || !videoConstraints.width) return;
     const canvas = canvasRef.current;
-    console.log("video.width", videoConstraints.width);
-    const { width: canvasW, height: canvasH } = videoConstraints;
+    const { width: canvasW, height: canvasH, aspectRatio } = videoConstraints;
     canvas.width = canvasW;
     canvas.height = canvasH;
-    setSizeModifier({
-      width: screenW / canvasW,
-      height: screenH / canvasH,
-      aspectRatio: screenW / screenH,
-    });
+    aspectRatio > 1
+      ? setSizeModifier({
+          width: screenW / canvasW,
+          height: screenH / canvasH,
+          aspectRatio: innerWidth / screenW,
+        })
+      : setSizeModifier({
+          width: screenW / canvasW,
+          height: screenH / canvasH,
+          aspectRatio: innerHeight / screenH,
+        });
+
     // settings
 
     const xRows = screenW < 768 ? 10 : 20;

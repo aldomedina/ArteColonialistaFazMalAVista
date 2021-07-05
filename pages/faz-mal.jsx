@@ -81,14 +81,27 @@ const FazMal = () => {
             />
           )}
           <div className="h-full" />
-          <animated.div style={contentBoxProps} className="content bg-white">
+          <animated.div
+            style={contentBoxProps}
+            className="content bg-white p-5px"
+          >
             <h1 className="big-title">A ARTE COLONIALISTA FAZ MAL À VISTA</h1>
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ex quam
-              ab, dolores voluptas repudiandae ea consectetur aspernatur odio
-              ipsum possimus impedit consequatur sunt vitae alias deserunt
-              tenetur. Vero, ad harum.
-            </p>
+            <h2 className="monument-name uppercase mb-1">
+              Padrão dos <br /> descobrimentos
+            </h2>
+            <div className="body">
+              <p>
+                <strong>
+                  Ode ao colonialismo, ressaca da ditadura e fetiche dos
+                  <i> influencers</i>
+                </strong>{" "}
+                . O Monumeno Padrão dos Descobrimentos Lorem ipsum dolor sit
+                amet consectetur, adipisicing elit. Ex quam ab, dolores voluptas
+                repudiandae ea consectetur aspernatur odio ipsum possimus
+                impedit consequatur sunt vitae alias deserunt tenetur. Vero, ad
+                harum.
+              </p>
+            </div>
           </animated.div>
         </div>
       </div>

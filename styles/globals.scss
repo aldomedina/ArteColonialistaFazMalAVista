@@ -29,12 +29,18 @@ a {
 
 ul {
   list-style: none;
-  padding: 0;
+}
+button,
+p,
+ul,
+h1,
+h2,
+h3,
+h4 {
   margin: 0;
-}
-button {
   padding: 0;
 }
+
 .layout {
   .horizontal-slider {
     transform: translate3d(calc(-100vw - 230px), 0, 0);

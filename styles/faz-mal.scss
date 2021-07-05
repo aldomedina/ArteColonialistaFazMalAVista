@@ -1,14 +1,17 @@
 .faz-mal {
   .content {
-    padding: 5px 0;
     min-height: 100vh;
     margin-top: -10vh;
     .big-title {
-      text-align: center;
-      font-size: 7.6vw;
-      margin-bottom: 2.5rem;
+      font-size: 7.4vw;
+      margin-bottom: 1.5rem;
     }
-    p {
+    .monument-name {
+      font-size: 12.4vw;
+      margin-bottom: 1.5rem;
+    }
+
+    .body p {
       padding-left: 30vw;
     }
   }
