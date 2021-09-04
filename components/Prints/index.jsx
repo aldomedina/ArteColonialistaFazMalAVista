@@ -36,9 +36,9 @@ const Prints = ({ data }) => {
         COLONIALIST DEPICTIONS
       </h3>
       <div className="flex flex-col ">
-        {data?.map((el, i) => (
+        {data?.slice(0, 5).map((el, i) => (
           <div key={`${el.id}-${el.class}`} className="mb-05">
-            <p>{`${getTime(el.date)} - ${
+            <p>{`${el.id} - ${
               el.class === "person" ? "Savage - " : `Exotic ${el.class}`
             } (${el.score.toLocaleString("en", { style: "percent" })})`}</p>
             <h4 className="text-xl">

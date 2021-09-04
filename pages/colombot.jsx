@@ -102,11 +102,18 @@ const Colombot = () => {
       detections.forEach((prediction, i) => {
         const [x, y, w, h] = prediction["bbox"];
         const text =
-          prediction["class"] === "person"
-            ? "savage"
-            : `exotic ${prediction["class"]}`;
-        ctx.font = "18px";
+          prediction["class"] === "PERSON"
+            ? "SAVAGE"
+            : `EXOTIC ${prediction["class"].toUpperCase()}`;
+        ctx.save();
+        ctx.font = "35px NeueBit";
+        ctx.fillStyle = "white";
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.shadowBlur = 5;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
         ctx.fillText(text, x, y);
+        ctx.restore();
         ctx.drawImage(
           pixelatedCanvas,
           x, // x
@@ -124,20 +131,18 @@ const Colombot = () => {
   // Prints
   useMemo(() => {
     if (detections.length && activeSection === "main") {
-      const printsCopy = [...prints];
+      let printsCopy = [...prints];
+      if (printsCopy.length > 20) printsCopy = printsCopy.slice(0, 6);
       detections.map((det) => {
         if (det.score < 0.75) return;
-        printsCopy.length + 1 > 5 && printsCopy.shift();
-        printsCopy.push({
+        printsCopy.unshift({
           date: new Date(),
           score: det.score,
           class: det.class,
           id: printsId,
         });
-        setPrints(printsId + 1);
+        setPrintsId(printsId + 1);
       });
-      console.log("detections", detections);
-      console.log("printsCopy", printsCopy);
       setPrints(printsCopy);
     }
   }, [detections]);

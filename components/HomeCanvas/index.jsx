@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/router";
 import padraoIMG from "../../assets/padrao.jpeg";
 import {
   createCanvasFromCoverImg,
@@ -11,10 +12,11 @@ const HomeCanvas = () => {
   const canvasRef = useRef();
   const imgRef = useRef();
   const { width, height, isMobile } = useWindowSize();
-
+  const router = useRouter();
   useEffect(() => {
     drawCanvas();
-  }, []);
+  }, [router.pathname]);
+
   useEffect(() => {
     drawCanvas();
   }, [width, height]);
