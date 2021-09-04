@@ -1,14 +1,15 @@
 import { getRandomInt, getTime } from "../../utils";
 
-const descriptions = [
-  "Potential Slave, maybe ",
-  "Mercancy vibes",
+const descriptionsPerson = [
+  "Potential Slave, maybe...",
+  "Hmm... Gives me mercancy vibes",
   "Could be a good exportation",
-  "Skin problems",
-  "No soul for sure",
   "Savage, but maybe with a soul",
+  "Meh... Skin problems",
+  "No soul, no love",
   "Looks like a good and talented servant",
   "I will call you... indian",
+  "He could become Christian very easily",
 ];
 
 const descriptionsThings = [
@@ -50,8 +51,11 @@ const Prints = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((el) => (
-            <tr style={{ borderBottom: "1px solid black" }}>
+          {data?.map((el, i) => (
+            <tr
+              key={`depection-${i}`}
+              style={{ borderBottom: "1px solid black" }}
+            >
               <th
                 className="mr-1"
                 style={{
@@ -72,7 +76,7 @@ const Prints = ({ data }) => {
                   {el.class === "person" ? "Savage - " : `Exotic ${el.class}: `}
                 </span>
                 {el.class === "person"
-                  ? descriptions[getRandomInt(descriptions.length)]
+                  ? descriptionsPerson[getRandomInt(descriptionsPerson.length)]
                   : descriptionsThings[getRandomInt(descriptionsThings.length)]}
               </th>
             </tr>

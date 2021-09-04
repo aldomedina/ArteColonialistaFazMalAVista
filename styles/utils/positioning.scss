@@ -5,6 +5,9 @@
 .absolute {
   position: absolute;
 }
+.sticky {
+  position: sticky;
+}
 .relative {
   position: relative;
 }
@@ -69,6 +72,9 @@
 }
 .top-0 {
   top: 0;
+}
+.right-0 {
+  right: 0;
 }
 .left-5px {
   left: 5px;

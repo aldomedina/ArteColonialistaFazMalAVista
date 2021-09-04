@@ -1,23 +1,43 @@
 .home {
   h1 {
     width: calc(100vw - 10px);
-    font-size: 14vw;
+    font-size: 13vw;
+    line-height: 0.7;
     @include respond(mobile) {
-      font-size: 17vw;
+      line-height: 0.8;
+      font-size: 13.4vw;
     }
-
     span {
       &:first-child {
         margin-left: 40px;
       }
     }
   }
-
   .big-title {
-    font-size: 21vw;
+    font-size: 20vw;
     line-height: 0.6;
+
     @include respond(mobile) {
-      font-size: 21.2vw;
+      line-height: 0.7;
+      font-size: 22vw;
+    }
+  }
+  h2 {
+    margin-top: 0.7rem;
+    line-height: 0.5;
+    text-transform: uppercase;
+    font-size: 7.8vw;
+    .linetrough {
+      position: relative;
+      &:after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 5px;
+        top: calc(50% - 5px);
+        left: 0;
+        background-color: black;
+      }
     }
   }
   &-canvas {

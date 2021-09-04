@@ -25,3 +25,11 @@
     transform: rotate(360deg);
   }
 }
+@keyframes scanning {
+  0% {
+    transform: translate3d(0, 0vh, 0);
+  }
+  100% {
+    transform: translate3d(0, 100vh, 0);
+  }
+}

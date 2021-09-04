@@ -23,6 +23,13 @@ const Layout = ({ children }) => {
     delay: 0,
   });
 
+  const downloadResearch = () => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = research;
+    link.dispatchEvent(new MouseEvent("click"));
+  };
+
   return (
     <div className="layout h-full max-w-screen overflow-hidden">
       <animated.div
@@ -36,24 +43,38 @@ const Layout = ({ children }) => {
         >
           <ul className="flex flex-col">
             <li>
-              <Link href="/">
+              <Link href="/" passHref>
                 <span onClick={() => setSection("main")}>HOME</span>
               </Link>
             </li>
             <li>
-              <Link href="/projeto">
-                <span onClick={() => setSection("main")}>O PROJETO</span>
-              </Link>
+              <button
+                className="text-white"
+                onClick={() => setSection("bonus")}
+              >
+                The Projet
+              </button>
             </li>
             <li>
-              A PESQUISA
-              <img src={downloadIcon} alt="download-icon" className="ml-05" />
+              <a
+                href="https://drive.google.com/file/d/19SucwlAS2fLg1XYA1OW669BjEu4WPrvZ/view"
+                target="_blank"
+                rel="noreferrer"
+              >
+                RESEARCH
+                <img src={downloadIcon} alt="download-icon" className="ml-05" />
+              </a>
+            </li>
+            <li>
+              <Link href="/colombot" passHref>
+                <span onClick={() => setSection("main")}>COLOMBOT</span>
+              </Link>
             </li>
           </ul>
 
-          <button className="text-white" onClick={() => setSection("bonus")}>
+          {/* <button className="text-white" onClick={() => setSection("bonus")}>
             BONUS TRACK
-          </button>
+          </button> */}
         </nav>
         {children}
       </animated.div>

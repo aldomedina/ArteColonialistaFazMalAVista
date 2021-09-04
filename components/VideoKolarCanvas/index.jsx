@@ -22,6 +22,7 @@ const VideoKolarCanvas = ({
   const [sizeModifier, setSizeModifier] = useState(1);
 
   useEffect(() => {
+    // 1. initialize settings
     if (!canvasRef || !screenW || !screenH || !videoConstraints.width) return;
     const canvas = canvasRef.current;
     const { width: canvasW, height: canvasH, aspectRatio } = videoConstraints;
@@ -39,8 +40,6 @@ const VideoKolarCanvas = ({
           aspectRatio: innerHeight / screenH,
         });
 
-    // settings
-
     const xRows = screenW < 768 ? 10 : 20;
     const pieceW = canvasW / xRows;
     const yRows = canvasH / pieceW;
@@ -51,7 +50,7 @@ const VideoKolarCanvas = ({
       yPos = 0;
     const copyPieces = [];
 
-    // create and shuffle pieces
+    // 2. create pieces
     for (let i = 0; i < xRows * yRows; i++) {
       piece = {};
       piece.sx = xPos;
@@ -74,13 +73,14 @@ const VideoKolarCanvas = ({
     });
   }, []);
 
+  // 3. Kolarize
   useEffect(() => {
     if (firstOrder.length && pieces.length) {
-      console.log("areMonuments", areMonuments);
       areMonuments ? setPieces(shuffleArray(pieces)) : setPieces(firstOrder);
     }
   }, [areMonuments]);
 
+  // 4. Draw in canvas
   useAnimationFrame(() => grabFrame());
   const grabFrame = () => {
     if (!canvasRef || !videoRef) return;
