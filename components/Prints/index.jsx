@@ -21,68 +21,36 @@ const descriptionsThings = [
 ];
 
 const Prints = ({ data }) => {
+  // {getTime(el.date)}
+
+  // <span>
+  //               {el.class === "person" ? "Savage - " : `Exotic ${el.class}: `}
+  //             </span>
+  //             {el.class === "person"
+  //               ? descriptionsPerson[getRandomInt(descriptionsPerson.length)]
+  //               : descriptionsThings[getRandomInt(descriptionsThings.length)]}
+  // {el.score.toLocaleString("en", { style: "percent" })}
   return (
-    <div className="w-full text-white">
-      <table style={{ fontFamily: "monospace" }} className="max-w-content">
-        <thead>
-          <tr>
-            <th
-              style={{
-                textAlign: "left",
-                verticalAlign: "top",
-                paddingBottom: ".4rem",
-                paddingRight: ".2rem",
-              }}
-            >
-              Time
-            </th>
-            <th
-              style={{
-                textAlign: "left",
-                verticalAlign: "top",
-                paddingRight: ".2rem",
-              }}
-            >
-              Acc.
-            </th>
-            <th style={{ textAlign: "left", verticalAlign: "top" }}>
-              Colonialist Depiction
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.map((el, i) => (
-            <tr
-              key={`depection-${i}`}
-              style={{ borderBottom: "1px solid black" }}
-            >
-              <th
-                className="mr-1"
-                style={{
-                  textAlign: "left",
-                  fontSize: "0.8rem",
-                  verticalAlign: "top",
-                }}
-              >
-                {/* {el.date.toLocaleDateString()}
-                <br /> */}
-                {getTime(el.date)}
-              </th>
-              <th style={{ fontSize: "0.8rem", verticalAlign: "top" }}>
-                {el.score.toLocaleString("en", { style: "percent" })}
-              </th>
-              <th style={{ textAlign: "left", verticalAlign: "top" }}>
-                <span>
-                  {el.class === "person" ? "Savage - " : `Exotic ${el.class}: `}
-                </span>
-                {el.class === "person"
-                  ? descriptionsPerson[getRandomInt(descriptionsPerson.length)]
-                  : descriptionsThings[getRandomInt(descriptionsThings.length)]}
-              </th>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="w-full text-white p-5px">
+      <h3 className="text-3xl m-5px border-b-1-white">
+        COLONIALIST DEPICTIONS
+      </h3>
+      <div className="flex flex-col ">
+        {data?.map((el, i) => (
+          <div key={`${el.id}-${el.class}`} className="mb-05">
+            <p>{`${getTime(el.date)} - ${
+              el.class === "person" ? "Savage - " : `Exotic ${el.class}`
+            } (${el.score.toLocaleString("en", { style: "percent" })})`}</p>
+            <h4 className="text-xl">
+              &quot;
+              {el.class === "person"
+                ? descriptionsPerson[getRandomInt(descriptionsPerson.length)]
+                : descriptionsThings[getRandomInt(descriptionsThings.length)]}
+              &quot;
+            </h4>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

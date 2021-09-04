@@ -28,6 +28,7 @@ const Colombot = () => {
   const [detections, setDetections] = useState([]);
   const [prints, setPrints] = useState([]);
   const [isModelLoading, setIsModelLoading] = useState(true);
+  const [printsId, setPrintsId] = useState(0);
 
   useEffect(() => {
     navigator?.mediaDevices
@@ -126,13 +127,17 @@ const Colombot = () => {
       const printsCopy = [...prints];
       detections.map((det) => {
         if (det.score < 0.75) return;
-        printsCopy.length + 1 > 10 && printsCopy.shift();
+        printsCopy.length + 1 > 5 && printsCopy.shift();
         printsCopy.push({
           date: new Date(),
           score: det.score,
           class: det.class,
+          id: printsId,
         });
+        setPrints(printsId + 1);
       });
+      console.log("detections", detections);
+      console.log("printsCopy", printsCopy);
       setPrints(printsCopy);
     }
   }, [detections]);
