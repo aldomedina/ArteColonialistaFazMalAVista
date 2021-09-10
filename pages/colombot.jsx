@@ -4,6 +4,7 @@ import * as cocossd from "@tensorflow-models/coco-ssd";
 import styled from "styled-components";
 import useAnimationFrame from "../components/Hooks/useAnimationFrame";
 import { createFloydSteinbergCanvas } from "../components/Draws/FloydSteinberg";
+import { getRandomInt, shuffleArray } from "../utils";
 
 import useWindowSize from "../components/Hooks/useWindowsSize";
 import Burguer from "../components/Burguer";
@@ -18,6 +19,26 @@ const SCanvas = styled.canvas`
     `scale(${modifier.aspectRatio > 1 ? modifier.width : modifier.height})`};
 `;
 
+const descriptionsPerson = [
+  "Potential Slave, maybe...",
+  "Hmm... Gives me mercancy vibes",
+  "Could be a good exportation",
+  "Savage, but maybe with a soul",
+  "Meh... Skin problems",
+  "No soul, no love",
+  "Looks like a good and talented servant",
+  "I will call you... indian",
+  "He could become Christian very easily",
+];
+
+const descriptionsThings = [
+  "Shall be deliver to the King",
+  "How splendid! new exotic piece for my museum",
+  "LOOOOOOOT!!!!",
+  "Kind of shine, might be gold? mine!",
+  "From now own that's mine",
+];
+
 const Colombot = () => {
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
@@ -29,6 +50,11 @@ const Colombot = () => {
   const [prints, setPrints] = useState([]);
   const [isModelLoading, setIsModelLoading] = useState(true);
   const [printsId, setPrintsId] = useState(0);
+
+  // TODO: create pieces matrix for different ratios. Current: 3x8 (= 24)
+  const [baseMatrix, setBaseMatrix] = useState(
+    shuffleArray([...Array(24).keys()])
+  );
 
   useEffect(() => {
     navigator?.mediaDevices
@@ -67,7 +93,7 @@ const Colombot = () => {
     net && setIsModelLoading(false);
     setInterval(() => {
       activeSection === "main" && detect(net);
-    }, 1500);
+    }, 2000);
   };
 
   const detect = async (net) => {
@@ -76,6 +102,31 @@ const Colombot = () => {
     const predictions = await net.detect(videoRef.current);
     setDetections(predictions);
   };
+
+  // Prints
+  useEffect(() => {
+    let id = printsId;
+    if (detections.length && activeSection === "main") {
+      let printsCopy = [...prints];
+      detections.map((det) => {
+        if (det.score < 0.75) return;
+        printsCopy.unshift({
+          score: det.score,
+          class: det.class,
+          description:
+            det.class === "person"
+              ? descriptionsPerson[getRandomInt(descriptionsPerson.length)]
+              : descriptionsThings[getRandomInt(descriptionsThings.length)],
+          id,
+        });
+        id++;
+      });
+      setPrintsId(id);
+      setPrints(printsCopy);
+    }
+  }, [detections]);
+
+  // DRAW
 
   useAnimationFrame(() => grabFrame());
 
@@ -86,21 +137,84 @@ const Colombot = () => {
 
     if (!canvas || !videoInput) return;
     const ctx = canvas.getContext("2d");
-    const { width, height } = canvas;
     ctx.drawImage(videoInput, 0, 0);
-    const color = {
-      r: 108,
-      g: 245,
-      b: 189,
-    };
-    const pixelatedCanvas = createFloydSteinbergCanvas(canvas, color);
 
-    // draw
-    ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
     detections &&
       !!detections.length &&
       detections.forEach((prediction, i) => {
         const [x, y, w, h] = prediction["bbox"];
+        const pieceW = w / 3;
+        const pieceH = h / 8;
+        const baseX = x;
+        const baseY = y;
+        // create array with pieces
+        let posX = x,
+          posY = y;
+        const orderedPieces = [];
+        for (let i = 0; i < baseMatrix.length; i++) {
+          const newPiece = {
+            posX,
+            posY,
+            pieceH,
+            pieceW,
+          };
+          orderedPieces.push(newPiece);
+          posX += pieceW;
+          if (posX >= w + baseX) {
+            posX = 0;
+            posY += pieceH;
+          }
+        }
+        // use baseMatrix to shuffle pieces
+        const shuffledPieces = [];
+        baseMatrix.forEach(
+          (shuffledIndex, i) =>
+            (shuffledPieces[i] = orderedPieces[shuffledIndex])
+        );
+
+        // draw pieces
+        let drawingPiece = {};
+        posX = baseX;
+        posY = baseY;
+        for (let i = 0; i < shuffledPieces.length; i++) {
+          drawingPiece = shuffledPieces[i];
+          ctx.drawImage(
+            videoInput,
+            drawingPiece.posX,
+            drawingPiece.posY,
+            pieceW,
+            pieceH,
+            posX,
+            posY,
+            pieceW,
+            pieceH
+          );
+          posX += pieceW;
+          if (posX >= w + baseX) {
+            posX = 0;
+            posY += pieceH;
+          }
+        }
+
+        // shuffledPieces.forEach((piece, i) => {
+        //   ctx.drawImage(
+        //     videoInput,
+        //     piece.posX,
+        //     piece.posY,
+        //     pieceW,
+        //     pieceH,
+        //     posX,
+        //     posY,
+        //     pieceW,
+        //     pieceH
+        //   );
+        //   if ((i + 1) % 3 === 0) {
+        //     posX = baseX;
+        //     posY += pieceH;
+        //   }
+        // });
+
+        // ADD TEXT
         const text =
           prediction["class"] === "PERSON"
             ? "SAVAGE"
@@ -114,38 +228,8 @@ const Colombot = () => {
         ctx.shadowOffsetY = 1;
         ctx.fillText(text, x, y);
         ctx.restore();
-        ctx.drawImage(
-          pixelatedCanvas,
-          x, // x
-          y, // y
-          w, // width
-          h, // height
-          x, // x
-          y, // y
-          w, // width
-          h // height
-        );
       });
   };
-
-  // Prints
-  useMemo(() => {
-    if (detections.length && activeSection === "main") {
-      let printsCopy = [...prints];
-      if (printsCopy.length > 20) printsCopy = printsCopy.slice(0, 6);
-      detections.map((det) => {
-        if (det.score < 0.75) return;
-        printsCopy.unshift({
-          date: new Date(),
-          score: det.score,
-          class: det.class,
-          id: printsId,
-        });
-        setPrintsId(printsId + 1);
-      });
-      setPrints(printsCopy);
-    }
-  }, [detections]);
 
   return (
     <Layout>
