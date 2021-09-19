@@ -144,8 +144,8 @@ const Colombot = () => {
       detections.forEach((prediction, i) => {
         const [x, y, w, h] = prediction["bbox"];
         const isTaller = h > w;
-        const pieceW = isTaller ? w / 3 : w / 8;
-        const pieceH = isTaller ? h / 8 : w / 3;
+        const pieceW = isTaller ? w / 3 : w / 6;
+        const pieceH = isTaller ? h / 8 : h / 4;
         const baseX = x;
         const baseY = y;
         // create array with pieces
@@ -162,7 +162,7 @@ const Colombot = () => {
           orderedPieces.push(newPiece);
           posX += pieceW;
           if (posX >= w + baseX) {
-            posX = 0;
+            posX = x;
             posY += pieceH;
           }
         }
@@ -191,8 +191,8 @@ const Colombot = () => {
             pieceH
           );
           posX += pieceW;
-          if (posX >= w + baseX) {
-            posX = 0;
+          if (posX > w + baseX) {
+            posX = x;
             posY += pieceH;
           }
         }
