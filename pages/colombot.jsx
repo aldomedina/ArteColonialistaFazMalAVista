@@ -143,8 +143,9 @@ const Colombot = () => {
       !!detections.length &&
       detections.forEach((prediction, i) => {
         const [x, y, w, h] = prediction["bbox"];
-        const pieceW = w / 3;
-        const pieceH = h / 8;
+        const isTaller = h > w;
+        const pieceW = isTaller ? w / 3 : w / 8;
+        const pieceH = isTaller ? h / 8 : w / 3;
         const baseX = x;
         const baseY = y;
         // create array with pieces
@@ -196,27 +197,9 @@ const Colombot = () => {
           }
         }
 
-        // shuffledPieces.forEach((piece, i) => {
-        //   ctx.drawImage(
-        //     videoInput,
-        //     piece.posX,
-        //     piece.posY,
-        //     pieceW,
-        //     pieceH,
-        //     posX,
-        //     posY,
-        //     pieceW,
-        //     pieceH
-        //   );
-        //   if ((i + 1) % 3 === 0) {
-        //     posX = baseX;
-        //     posY += pieceH;
-        //   }
-        // });
-
         // ADD TEXT
         const text =
-          prediction["class"] === "PERSON"
+          prediction["class"] === "person"
             ? "SAVAGE"
             : `EXOTIC ${prediction["class"].toUpperCase()}`;
         ctx.save();
