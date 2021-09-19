@@ -3,7 +3,6 @@ import * as tf from "@tensorflow/tfjs";
 import * as cocossd from "@tensorflow-models/coco-ssd";
 import styled from "styled-components";
 import useAnimationFrame from "../components/Hooks/useAnimationFrame";
-import { createFloydSteinbergCanvas } from "../components/Draws/FloydSteinberg";
 import { getRandomInt, shuffleArray } from "../utils";
 
 import useWindowSize from "../components/Hooks/useWindowsSize";
@@ -20,10 +19,10 @@ const SCanvas = styled.canvas`
 `;
 
 const descriptionsPerson = [
-  "Potential Slave, maybe...",
+  "Potential Slave",
   "Hmm... Gives me mercancy vibes",
   "Could be a good exportation",
-  "Savage, but maybe with a soul",
+  "but maybe with a soul",
   "Meh... Skin problems",
   "No soul, no love",
   "Looks like a good and talented servant",
@@ -35,8 +34,8 @@ const descriptionsThings = [
   "Shall be deliver to the King",
   "How splendid! new exotic piece for my museum",
   "LOOOOOOOT!!!!",
-  "Kind of shine, might be gold? mine!",
-  "From now own that's mine",
+  "It shines, might be gold?. It's mine!",
+  "From now own, that's mine",
 ];
 
 const Colombot = () => {
@@ -50,6 +49,8 @@ const Colombot = () => {
   const [prints, setPrints] = useState([]);
   const [isModelLoading, setIsModelLoading] = useState(true);
   const [printsId, setPrintsId] = useState(0);
+  const [synth, setSynth] = useState();
+  const [voice, setVoice] = useState();
 
   // TODO: create pieces matrix for different ratios. Current: 3x8 (= 24)
   const [baseMatrix, setBaseMatrix] = useState(
@@ -85,9 +86,23 @@ const Colombot = () => {
       aspectRatio: innerWidth / innerHeight,
     });
     videoRef.current.addEventListener("loadeddata", runCoco);
+    setSynth(window.speechSynthesis);
     return () => videoRef.current.removeEventListener("loadeddata", runCoco);
   }, [videoConstraints]);
 
+  useEffect(() => {
+    if (synth) {
+      synth.onvoicechanged = changeVoice();
+    }
+  }, [synth]);
+
+  const changeVoice = () => {
+    const voices = synth.getVoices();
+    const googleBritishName = voices.find(
+      (el) => el.name.toLowerCase().includes("male") && el.lang === "en-GB"
+    );
+    if (googleBritishName) setVoice(googleBritishName);
+  };
   const runCoco = async () => {
     const net = await cocossd.load();
     net && setIsModelLoading(false);
@@ -123,6 +138,31 @@ const Colombot = () => {
       });
       setPrintsId(id);
       setPrints(printsCopy);
+
+      // VOICES
+      if (
+        voice &&
+        detections.length &&
+        synth &&
+        printsCopy[0] &&
+        !synth.speaking
+      ) {
+        const { class: detection, description } = printsCopy[0];
+        const message = `a  ${
+          detection === "person" ? "savage" : detection
+        }, ${description}`;
+        const msg = new SpeechSynthesisUtterance(message);
+        const voices = synth.getVoices();
+        if (voice) {
+          console.log(voice);
+          msg.voice = voice;
+        }
+        msg.pitch = 1.3;
+        msg.lang = "en-GB";
+        synth.speak(msg);
+      } else {
+        synth.cancel();
+      }
     }
   }, [detections]);
 
